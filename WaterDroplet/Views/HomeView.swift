@@ -37,9 +37,52 @@ struct HomeView: View {
                         .aspectRatio(contentMode: .fit)
                         .foregroundColor(Color.white)
                         .scaleEffect(x: 1.1, y: 1)
+                        .offset(y: -1)
                     
                     // MARK: Wave Form Shape
-                    WaterWave(progress: 0.5, waveHeight: 0.1)
+                    WaterWave(progress: 0.5, waveHeight: 0.1, offset: size.width)
+                        .fill(Color("waterBlue"))
+                    // MARK: Air Bubbles
+                        .overlay(content: {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.white.opacity(0.2))
+                                    .frame(width: 15, height: 15)
+                                    .offset(x: -20)
+                                
+                                Circle()
+                                    .fill(Color.white.opacity(0.2))
+                                    .frame(width: 15, height: 15)
+                                    .offset(x: 40, y: 30)
+                                
+                                Circle()
+                                    .fill(Color.white.opacity(0.2))
+                                    .frame(width: 25, height: 25)
+                                    .offset(x: -30, y: 80)
+                                
+                                Circle()
+                                    .fill(Color.white.opacity(0.2))
+                                    .frame(width: 25, height: 25)
+                                    .offset(x: 50, y: 70)
+                                
+                                Circle()
+                                    .fill(Color.white.opacity(0.2))
+                                    .frame(width: 10, height: 10)
+                                    .offset(x: 40, y: 100)
+                                
+                                Circle()
+                                    .fill(Color.white.opacity(0.2))
+                                    .frame(width: 10, height: 10)
+                                    .offset(x: -40, y: 50)
+                            }
+                        })
+                    // Masking into Drop Shape
+                        .mask {
+                            Image(systemName: "drop.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(10)
+                        }
                 }
                 .frame(width: size.width, height: size.height, alignment: .center)
             }
@@ -62,6 +105,13 @@ struct WaterWave: Shape {
     var progress: CGFloat
     var waveHeight: CGFloat
     
+    // Initial Animation Start
+    var offset: CGFloat
+    var animatableData: CGFloat {
+        get{ offset }
+        set{ offset = newValue}
+    }
+    
     func path(in rect: CGRect) -> Path {
         
         return Path { path in
@@ -73,7 +123,7 @@ struct WaterWave: Shape {
             
             for value in stride(from: 0, to: rect.width, by: 2) {
                 let x: CGFloat = value
-                let sine: CGFloat = sin(value)
+                let sine: CGFloat = sin(Angle(degrees: value + offset).radians)
                 let y: CGFloat = progressHeight + (height * sine)
                 
                 path.addLine(to: CGPoint(x: x, y: y))
