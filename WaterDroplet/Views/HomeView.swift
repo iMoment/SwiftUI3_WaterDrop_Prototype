@@ -19,6 +19,31 @@ struct HomeView: View {
                 .clipShape(Circle())
                 .padding(10)
                 .background(Color.white, in: Circle())
+            
+            Text("Time to get hydrated!")
+                .fontWeight(.semibold)
+                .foregroundColor(Color.gray)
+                .padding(.bottom, 30)
+            
+            // MARK: Wave Form
+            GeometryReader { proxy in
+                let size = proxy.size
+                
+                ZStack {
+                    // MARK: Water Drop
+                    Image(systemName: "drop.fill")
+                        .resizable()
+                        .renderingMode(.template)
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(Color.white)
+                        .scaleEffect(x: 1.1, y: 1)
+                    
+                    // MARK: Wave Form Shape
+                }
+                .frame(width: size.width, height: size.height, alignment: .center)
+            }
+            .frame(height: 350)
+            
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
