@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
+    @State var progress: CGFloat = 0.5
+    @State var startAnimation: CGFloat = 0
     
     var body: some View {
         
@@ -40,7 +42,7 @@ struct HomeView: View {
                         .offset(y: -1)
                     
                     // MARK: Wave Form Shape
-                    WaterWave(progress: 0.5, waveHeight: 0.1, offset: size.width)
+                    WaterWave(progress: progress, waveHeight: 0.1, offset: startAnimation)
                         .fill(Color("waterBlue"))
                     // MARK: Air Bubbles
                         .overlay(content: {
@@ -81,13 +83,34 @@ struct HomeView: View {
                             Image(systemName: "drop.fill")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .padding(10)
+                                .padding(20)
+                        }
+                    // MARK: Button
+                        .overlay(alignment: .bottom) {
+                            Button {
+                                progress += 0.05
+                            } label: {
+                                Image(systemName: "plus")
+                                    .font(.system(size: 40, weight: .black))
+                                    .foregroundColor(Color("waterBlue"))
+                                    .shadow(radius: 2)
+                                    .padding(25)
+                                    .background(Color.white, in: Circle())
+                            }
+                            .offset(y: 40)
                         }
                 }
                 .frame(width: size.width, height: size.height, alignment: .center)
+                .onAppear {
+                    // MARK: Looping Animation
+                    withAnimation(.linear(duration: 2).repeatForever(autoreverses: false)) {
+                        startAnimation = size.width + 10
+                    }
+                }
             }
             .frame(height: 350)
             
+            Slider(value: $progress)
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
